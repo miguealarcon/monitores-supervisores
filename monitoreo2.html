@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Monitoreo-2 VANCAN 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --primary: #0b5ed7;
+      --primary-600: #0a58ca;
+      --muted: #6b7280;
+      --success: #16a34a;
+      --danger: #dc3545;
+      --radius: 10px;
+      --shadow: 0 6px 18px rgba(11, 94, 215, 0.08);
+      --maxw: 1000px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+      background: var(--bg);
+      margin: 0;
+      color: #0f172a;
+    }
+    .wrap {
+      max-width: var(--maxw);
+      margin: 28px auto;
+      padding: 20px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .brand h1 {
+      font-size: 18px;
+      margin: 0;
+    }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    #loginCard {
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    label {
+      font-size: 14px;
+      margin-bottom: 6px;
+      display: block;
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+    }
+    input[type=text], input[type=password], input[type=date], select, input[type=number], textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #e6e9ef;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+    }
+    .radio-group {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .radio-group label {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+    .radio-group input[type=radio] {
+      margin: 0;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    .question-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0 0 14px 0;
+      color: var(--primary);
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 12px 0;
+      color: var(--primary);
+    }
+    .checkbox-group {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .checkbox-group label {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+    .checkbox-group input[type=checkbox] {
+      margin: 0;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    .section-header {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 20px 0 16px 0;
+      padding: 8px 0;
+      border-top: 2px solid var(--primary);
+      border-bottom: 2px solid var(--primary);
+      color: var(--primary);
+    }
+    .conditional-field {
+      display: none;
+      margin-top: 10px;
+    }
+    .conditional-field.visible {
+      display: block;
+    }
+    .conditional-field input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #e6e9ef;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    #loginCard .actions {
+      justify-content: center;
+    }
+    button.btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    button.btn.ghost {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid rgba(11, 94, 215, 0.12);
+    }
+    button.btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 760px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .form-section {
+      margin-top: 16px;
+    }
+    h2.section {
+      margin: 6px 0 10px 0;
+      color: var(--primary);
+    }
+
+
+    .small {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .fade {
+      transition: all 0.28s ease;
+      opacity: 0;
+      transform: translateY(6px);
+      height: 0;
+      overflow: hidden;
+    }
+    .fade.show {
+      opacity: 1;
+      transform: none;
+      height: auto;
+    }
+    .hidden-field {
+      display: none;
+    }
+    .hidden-field.visible {
+      display: block;
+    }
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      background: #111827;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 8px;
+      box-shadow: 0 8px 30px rgba(2, 6, 23, 0.4);
+      display: none;
+      z-index: 1000;
+    }
+    .toast.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="24" height="24" rx="6" fill="#0b5ed7"/>
+          <path d="M7 12h10M7 8h10M7 16h6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <h1>Monitoreo-2 VANCAN 2026</h1>
+          <div class="muted">Registro de participación</div>
+        </div>
+      </div>
+      <div class="muted">Fecha: <strong id="nowDate"></strong></div>
+    </header>
+
+    <main class="grid">
+      <section id="loginCard" class="card">
+        <h2 style="margin:0 0 8px 0">Acceso</h2>
+        <form id="loginForm" aria-label="Formulario de acceso">
+          <label for="usuario">Usuario</label>
+          <input id="usuario" name="usuario" type="text" required autocomplete="username">
+          <label for="password">Contraseña</label>
+          <input id="password" name="password" type="password" required autocomplete="current-password">
+          <div class="actions">
+            <button class="btn" type="submit">Ingresar</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="formArea" class="fade">
+        <div class="card" style="display:flex;gap:14px;flex-direction:column">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+            <div>
+              <h2 class="section">Registro de Monitoreo-2</h2>
+              <div class="small">Usuario: <span id="userLabel">-</span></div>
+            </div>
+          </div>
+
+          <form id="miFormulario">
+            <div class="form-grid">
+              <div>
+                <label for="microred">Microred</label>
+                <select id="microred" name="microred" required>
+                  <option value="" selected disabled>Seleccione una microred...</option>
+                  <option>Alto Selva Alegre</option>
+                  <option>Ampliacion Paucarpata</option>
+                  <option>Buenos Aires</option>
+                  <option>Cerro Colorado</option>
+                  <option>Characato</option>
+                  <option>Chiguata</option>
+                  <option>Ciudad Blanca</option>
+                  <option>Ciudad de dios</option>
+                  <option>Edificadores Misti</option>
+                  <option>Francisco Bolognesi</option>
+                  <option>Generalisimo San Martin</option>
+                  <option>Javier Llosa Garcia</option>
+                  <option>Mariano Melgar</option>
+                  <option>Mariscal Castilla</option>
+                  <option>Maritza Campos Diaz</option>
+                  <option>Pedregal</option>
+                  <option>Socabaya</option>
+                  <option>Tiabaya</option>
+                  <option>Victor Raul Hinojosa</option>
+                  <option>Yanahuara</option>
+                  <option>15 de Agosto</option>
+                </select>
+              </div>
+              <div>
+                  <label for="vaccine_type">Tipo de vacunación</label>
+                  <select id="vaccine_type" name="vaccine_type">
+                    <option value="" selected disable>Seleccione el tipo de vacunacion...</option>option>
+                    <option>general</option>
+                    <option>barrido</option>
+                  </select>
+                </div>
+              <div>
+                <label for="fecha">Fecha</label>
+                <input id="fecha" name="fecha" type="date" required>
+              </div>
+            </div>
+
+            <!-- Movilidad para transporte de personal -->
+            <div class="section-header">I. APERTURA</div>
+
+            <div class="form-section">
+              <h1 class="section-title">1. Movilidad para transporte de personal</h1>
+              <div class="form-grid">
+                <div>
+                  <label>Bus (cantidad)</label>
+                  <input type="number" min="0" id="count_bus" name="count_bus" value="0">
+                </div>
+                <div>
+                  <label>Camioneta (cantidad)</label>
+                  <input type="number" min="0" id="count_camioneta" name="count_camioneta" value="0">
+                </div>
+                <div>
+                  <label>Auto (cantidad)</label>
+                  <input type="number" min="0" id="count_auto" name="count_auto" value="0">
+                </div>
+              </div>
+              <div class="form-grid" style="margin-top:12px">
+                <div>
+                  <label>Otros (cantidad)</label>
+                  <input type="number" min="0" id="count_otros" name="count_otros" value="0">
+                </div>
+                <div></div>
+                <div></div>
+              </div>
+
+              <div id="movilidadDetails" style="margin-top:12px"></div>
+
+              <input type="hidden" name="movilidad_json" id="movilidad_json" value="">
+            </div>
+
+            <!-- Pregunta 2: Hubo Retrasos durante la VANCAN (checkboxes - múltiples opciones) -->
+              <div class="form-section">
+                <h1 class="section-title">2. ¿Qué retrasos impidieron que los grupos de vacunación salgan a tiempo a sus puntos ?</h1>
+                <div class="checkbox-group">
+                  <label><input type="checkbox" name="vancan_delays" value="Ninguno" id="delays-ninguno-check"> Ninguno</label>
+                  <label><input type="checkbox" name="vancan_delays" value="Movilidad"> Movilidad</label>
+                  <label><input type="checkbox" name="vancan_delays" value="Entrega de materiales"> Entrega de materiales</label>
+                  <label><input type="checkbox" name="vancan_delays" value="Cadena de frio"> Cadena de frio</label>
+                  <label><input type="checkbox" name="vancan_delays" value="Distribucion de personal"> Distribución de personal</label>
+                  <label><input type="checkbox" name="vancan_delays" value="Tardanza de personal"> Tardanza de personal</label>
+                  <label><input type="checkbox" name="vancan_delays" value="Otros" id="otros-check"> Otros</label>
+                </div>
+                <div class="conditional-field" id="vancan_delays-vancan_delays_o">
+                  <label>¿Quién?</label>
+                  <input type="text" name="vancan_delays_o" placeholder="Especificar nombre/entidad">
+                </div>
+              </div>
+
+
+            <!-- Sección de Vacunación -->
+            <div class="section-header">II. VACUNACIÓN</div>
+
+            <!-- preguntas especificas de vacunación -->
+            <div class="form-section">
+              <h1 class="section-title">3. ¿Cuántos equipos de vacunación se tenían planeados?</h1>
+              <input type="number" name="equipos_planeados" min="0" value="0">
+            </div>
+            <div class="form-section">
+              <h1 class="section-title">4. ¿Cuántos equipos de vacunación salieron a campo?</h1>
+              <input type="number" name="equipos_campo" min="0" value="0">
+            </div>
+            <div class="form-section">
+              <h1 class="section-title">5. ¿Hubo perifoneo con carro?</h1>
+              <div class="radio-group">
+                <label><input type="radio" name="perifoneo" value="Si"> Sí</label>
+                <label><input type="radio" name="perifoneo" value="No"> No</label>
+              </div>
+              <div class="conditional-field" id="perifoneo-count">
+                <label>Cantidad:</label>
+                <input type="number" name="perifoneo_cant" min="0" value="0">
+              </div>
+            </div>
+
+            
+            <!-- Sección de observaciones -->
+            <div class="section-header">III. CIERRE</div>
+
+             <!-- Sección de incidentes dentro de cierre -->
+            <div class="form-section">
+              <h1 class="section-title">6. ¿Qué incidentes tuvieron durante la Vancan?</h1>
+              <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap:10px;">
+                <div>
+                  <label><input type="checkbox" name="inc_ninguno" value="Ninguno" id="inc_ninguno-check"> Ninguno</label>
+                </div>
+                <div>
+                  <label><input type="checkbox" id="inc_mordeduras-check" name="inc_mordeduras" value="Mordeduras"> Mordeduras</label>
+                  <div class="conditional-field" id="inc_mordeduras_n-wrap">
+                    <input type="number" name="inc_mordeduras_n" min="0" placeholder="N°" style="width:60px; margin-left:4px;">
+                  </div>
+                </div>
+                <div>
+                  <label><input type="checkbox" id="inc_alergicas-check" name="inc_alergicas" value="Reacciones Alérgicas"> Reacciones Alérgicas</label>
+                  <div class="conditional-field" id="inc_alergicas_n-wrap">
+                    <input type="number" name="inc_alergicas_n" min="0" placeholder="N°" style="width:60px; margin-left:4px;">
+                  </div>
+                </div>
+                <div>
+                  <label><input type="checkbox" id="inc_materiales-check" name="inc_materiales" value="Falta de materiales"> Falta de materiales</label>
+                  <div class="conditional-field" id="inc_materiales_n-wrap">
+                    <input type="number" name="inc_materiales_n" min="0" placeholder="N°" style="width:60px; margin-left:4px;">
+                  </div>
+                </div>
+                <div>
+                  <label><input type="checkbox" id="inc_vacunas-check" name="inc_vacunas" value="Falta de vacunas"> Falta de vacunas</label>
+                  <div class="conditional-field" id="inc_vacunas_n-wrap">
+                    <input type="number" name="inc_vacunas_n" min="0" placeholder="N°" style="width:60px; margin-left:4px;">
+                  </div>
+                </div>
+                <div>
+                  <label><input type="checkbox" id="inc_pobladores-check" name="inc_pobladores" value="Problemas con pobladores"> Problemas con pobladores</label>
+                  <div class="conditional-field" id="inc_pobladores_n-wrap">
+                    <input type="number" name="inc_pobladores_n" min="0" placeholder="N°" style="width:60px; margin-left:4px;">
+                  </div>
+                </div>
+                <div style="grid-column: span 2;">
+                  <label><input type="checkbox" id="inc_otros-check" name="inc_otros" value="Otros"> Otros</label>
+                  <div class="conditional-field" id="inc_otros_esp-wrap">
+                    <input type="text" name="inc_otros_esp" placeholder="Describir" style="width:100%;">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h1 class="section-title">7. Observaciones adicionales</h1>
+              <textarea name="observaciones" rows="4" placeholder="Escribe tus observaciones y comentarios aquí..."></textarea>
+            </div>
+
+            <div style="display:flex;gap:12px;align-items:center;margin-top:14px">
+              <button class="btn" type="submit" id="saveBtn">Guardar registro</button>
+              <button type="button" class="btn ghost" id="resetBtn">Limpiar</button>
+              <a href="../" class="btn ghost" style="text-decoration: none; display: inline-flex; align-items: center;">← Volver</a>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const url = "https://script.google.com/macros/s/AKfycbxj8NKgHlBuuF1Gx48H-eo-HSh7z1NR8RhNOJhMORWK350IUYK5D1JmTq1sm_65hwUJ/exec";
+
+    const $ = sel => document.querySelector(sel);
+    const nowDate = new Date().toLocaleDateString();
+    $('#nowDate').textContent = nowDate;
+
+    const loginForm = $('#loginForm');
+    const formArea = $('#formArea');
+    const userLabel = $('#userLabel');
+    let usuarioActivo = null;
+    let passwordActivo = null;
+
+    function showToast(msg, timeout=3000) {
+      const t = $('#toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), timeout);
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = loginForm.querySelector('button[type=submit]');
+      btn.disabled = true;
+      btn.textContent = 'Validando...';
+      const fd = new FormData(loginForm);
+      fd.append('login', 'true');
+      try {
+        const res = await fetch(url, { method: 'POST', body: fd });
+        const contentType = res.headers.get('content-type') || '';
+        if (!res.ok) {
+          const text = await res.text().catch(() => '');
+          console.error('Respuesta no OK', res.status, text);
+          showToast('Error del servidor: ' + res.status);
+        } else if (contentType.includes('application/json')) {
+          const data = await res.json();
+          if (data.success) {
+            usuarioActivo = fd.get('usuario');
+            passwordActivo = fd.get('password');
+            userLabel.textContent = usuarioActivo;
+            loginForm.closest('#loginCard').style.display = 'none';
+            formArea.classList.add('show');
+            showToast('Login correcto');
+          } else {
+            showToast(data.message || 'Credenciales incorrectas');
+          }
+        } else {
+          const text = await res.text().catch(() => '');
+          console.error('Respuesta inesperada al loguear (no JSON):', text);
+          showToast('Respuesta inesperada: revisa permisos/CORS del Web App de Apps Script');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('Error de conexión');
+      }
+      btn.disabled = false;
+      btn.textContent = 'Ingresar';
+    });
+
+    const form = $('#miFormulario');
+
+    function toggleHiddenFields() {
+      // perifoneo: mostrar cantidad si la respuesta es Sí
+      const perifSi = form.querySelector('input[name="perifoneo"][value="Si"]');
+      const perifField = document.getElementById('perifoneo-count');
+      if (perifSi && perifField) {
+        if (perifSi.checked) {
+          perifField.classList.add('visible');
+        } else {
+          perifField.classList.remove('visible');
+          const perifInput = form.querySelector('input[name="perifoneo_cant"]');
+          if (perifInput) perifInput.value = '';
+        }
+      }
+
+      // Pregunta 2: mostrar texto si está marcado "Otros" en retrasos
+      const otrosDelayCheck = document.getElementById('otros-check');
+      const delayOtrosField = document.getElementById('vancan_delays-vancan_delays_o');
+      if(otrosDelayCheck && delayOtrosField) {
+        if(otrosDelayCheck.checked){
+          delayOtrosField.classList.add('visible');
+        } else {
+          delayOtrosField.classList.remove('visible');
+          const inputDelayOtros = form.querySelector('input[name="vancan_delays_o"]');
+          if(inputDelayOtros) inputDelayOtros.value = '';
+        }
+      }
+
+      // Pregunta 6: incidentes - mostrar conteos/descripcion solo cuando se marque la casilla
+      const mordCheck = document.getElementById('inc_mordeduras-check');
+      const mordWrap = document.getElementById('inc_mordeduras_n-wrap');
+      if(mordCheck && mordWrap) {
+        if(mordCheck.checked) { 
+          mordWrap.classList.add('visible'); 
+        } else { 
+          mordWrap.classList.remove('visible'); 
+          const inp = mordWrap.querySelector('input');
+          if(inp) inp.value = '';
+        }
+      }
+
+      const alergCheck = document.getElementById('inc_alergicas-check');
+      const alergWrap = document.getElementById('inc_alergicas_n-wrap');
+      if(alergCheck && alergWrap) {
+        if(alergCheck.checked) { 
+          alergWrap.classList.add('visible');
+        } else { 
+          alergWrap.classList.remove('visible'); 
+          const inp = alergWrap.querySelector('input');
+          if(inp) inp.value = '';
+        }
+      }
+
+      const matCheck = document.getElementById('inc_materiales-check');
+      const matWrap = document.getElementById('inc_materiales_n-wrap');
+      if(matCheck && matWrap) {
+        if(matCheck.checked) { 
+          matWrap.classList.add('visible');
+        } else { 
+          matWrap.classList.remove('visible'); 
+          const inp = matWrap.querySelector('input');
+          if(inp) inp.value = '';
+        }
+      }
+
+      const vacCheck = document.getElementById('inc_vacunas-check');
+      const vacWrap = document.getElementById('inc_vacunas_n-wrap');
+      if(vacCheck && vacWrap) {
+        if(vacCheck.checked) { 
+          vacWrap.classList.add('visible');
+        } else { 
+          vacWrap.classList.remove('visible'); 
+          const inp = vacWrap.querySelector('input');
+          if(inp) inp.value = '';
+        }
+      }
+
+      const pobCheck = document.getElementById('inc_pobladores-check');
+      const pobWrap = document.getElementById('inc_pobladores_n-wrap');
+      if(pobCheck && pobWrap) {
+        if(pobCheck.checked) { 
+          pobWrap.classList.add('visible');
+        } else { 
+          pobWrap.classList.remove('visible'); 
+          const inp = pobWrap.querySelector('input');
+          if(inp) inp.value = '';
+        }
+      }
+
+      const otrosCb = document.getElementById('inc_otros-check');
+      const otrosWrap = document.getElementById('inc_otros_esp-wrap');
+      if (otrosCb && otrosWrap) {
+        if (otrosCb.checked) { 
+          otrosWrap.classList.add('visible');
+        } else {
+          otrosWrap.classList.remove('visible');
+          const inp = otrosWrap.querySelector('input');
+          if (inp) inp.value = '';
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      toggleHiddenFields();
+      renderMovilidad();
+      
+      // listeners generales del formulario para cambios (como en monitoreo.html)
+      form.addEventListener('input', () => {
+        toggleHiddenFields();
+      });
+      form.addEventListener('change', () => {
+        toggleHiddenFields();
+      });
+
+      // listeners individuales para incidentes (acceso directo)
+      ['inc_mordeduras','inc_alergicas','inc_materiales','inc_vacunas','inc_pobladores','inc_otros'].forEach(name=>{
+        const el = form.querySelector(`[name="${name}"]`);
+        if(el) el.addEventListener('change', () => { toggleHiddenFields(); });  
+      });
+
+      // listeners para otros elementos condicionales
+      const otrosCheck = document.getElementById('otros-check');
+      if(otrosCheck) otrosCheck.addEventListener('change', () => { toggleHiddenFields(); });
+
+
+      // Lógica para "Ninguno" en pregunta 2 (retrasos)
+      const delaysNingunoCheck = document.getElementById('delays-ninguno-check');
+      const delaysCheckboxes = form.querySelectorAll('input[name="vancan_delays"]');
+      
+      if(delaysNingunoCheck) {
+        delaysNingunoCheck.addEventListener('change', () => {
+          if(delaysNingunoCheck.checked) {
+            delaysCheckboxes.forEach(cb => {
+              if(cb !== delaysNingunoCheck) {
+                cb.checked = false;
+                cb.disabled = true;
+              }
+            });
+            // limpiar campo de otros
+            const otrosInput = form.querySelector('input[name="vancan_delays_o"]');
+            if(otrosInput) otrosInput.value = '';
+          } else {
+            delaysCheckboxes.forEach(cb => { cb.disabled = false; });
+          }
+          toggleHiddenFields();
+        });
+      }
+
+      // Listener para habilitar opciones cuando se marca alguna otra en pregunta 2
+      delaysCheckboxes.forEach(cb => {
+        if(cb.id !== 'delays-ninguno-check') {
+          cb.addEventListener('change', () => {
+            if(cb.checked && delaysNingunoCheck.checked) {
+              delaysNingunoCheck.checked = false;
+            }
+          });
+        }
+      });
+
+      // Lógica para "Ninguno" en pregunta 6 (incidentes)
+      const incNingunoCheck = document.getElementById('inc_ninguno-check');
+      const incidentsCheckboxes = ['inc_mordeduras','inc_alergicas','inc_materiales','inc_vacunas','inc_pobladores','inc_otros'];
+      
+      if(incNingunoCheck) {
+        incNingunoCheck.addEventListener('change', () => {
+          if(incNingunoCheck.checked) {
+            incidentsCheckboxes.forEach(name => {
+              const cb = form.querySelector(`[name="${name}"]`);
+              if(cb) {
+                cb.checked = false;
+                cb.disabled = true;
+              }
+            });
+            // limpiar campos de números/texto
+            ['inc_mordeduras_n', 'inc_alergicas_n', 'inc_materiales_n', 'inc_vacunas_n', 'inc_pobladores_n', 'inc_otros_esp'].forEach(fieldName => {
+              const inp = form.querySelector(`[name="${fieldName}"]`);
+              if(inp) inp.value = '';
+            });
+          } else {
+            incidentsCheckboxes.forEach(name => {
+              const cb = form.querySelector(`[name="${name}"]`);
+              if(cb) cb.disabled = false;
+            });
+          }
+          toggleHiddenFields();
+        });
+      }
+
+      // Listener para habilitar "Ninguno" cuando se marca alguna otra en pregunta 6
+      incidentsCheckboxes.forEach(name => {
+        const cb = form.querySelector(`[name="${name}"]`);
+        if(cb) {
+          cb.addEventListener('change', () => {
+            if(cb.checked && incNingunoCheck.checked) {
+              incNingunoCheck.checked = false;
+            }
+          });
+        }
+      });
+    });
+
+    // --- Movilidad dinámico ---
+    function createMovRow(type, idx) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'row';
+      wrapper.style.display = 'flex';
+      wrapper.style.gap = '12px';
+      wrapper.style.alignItems = 'center';
+      wrapper.style.marginTop = '8px';
+
+      const label = document.createElement('div');
+      label.style.minWidth = '160px';
+      label.textContent = type.charAt(0).toUpperCase() + type.slice(1) + ' #' + (idx+1);
+
+      const time = document.createElement('input');
+      time.type = 'time';
+      time.name = `${type}_hora_${idx}`;
+      time.style.maxWidth = '160px';
+
+      const ownerWrapper = document.createElement('div');
+      ownerWrapper.style.display = 'flex';
+      ownerWrapper.style.gap = '8px';
+      ownerWrapper.style.alignItems = 'center';
+
+      const ownerOptions = ['Municipio','Microred','Otro'];
+      ownerOptions.forEach(opt => {
+        const lab = document.createElement('label');
+        lab.style.display = 'flex';
+        lab.style.alignItems = 'center';
+        lab.style.gap = '6px';
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = `${type}_pertenece_${idx}`;
+        radio.value = opt;
+        lab.appendChild(radio);
+        lab.appendChild(document.createTextNode(opt));
+        ownerWrapper.appendChild(lab);
+      });
+
+      const otroInput = document.createElement('input');
+      otroInput.type = 'text';
+      otroInput.name = `${type}_pertenece_${idx}_otro`;
+      otroInput.placeholder = 'Especificar otro';
+      otroInput.style.display = 'none';
+      ownerWrapper.appendChild(otroInput);
+
+      ownerWrapper.addEventListener('change', () => {
+        const val = ownerWrapper.querySelector(`input[name="${type}_pertenece_${idx}"]:checked`);
+        if (val && val.value === 'Otro') {
+          otroInput.style.display = '';
+        } else {
+          otroInput.style.display = 'none';
+          otroInput.value = '';
+        }
+        collectMovilidadData();
+      });
+
+      time.addEventListener('input', collectMovilidadData);
+      otroInput.addEventListener('input', collectMovilidadData);
+
+      wrapper.appendChild(label);
+      wrapper.appendChild(time);
+      wrapper.appendChild(ownerWrapper);
+      return wrapper;
+    }
+
+    function renderMovilidad() {
+      const container = document.getElementById('movilidadDetails');
+      container.innerHTML = '';
+      const types = [
+        {key:'bus', label:'Bus', count: Number(document.getElementById('count_bus').value||0)},
+        {key:'camioneta', label:'Camioneta', count: Number(document.getElementById('count_camioneta').value||0)},
+        {key:'auto', label:'Auto', count: Number(document.getElementById('count_auto').value||0)},
+        {key:'otros', label:'Otros', count: Number(document.getElementById('count_otros').value||0)}
+      ];
+      types.forEach(t=>{
+        if (t.count > 0) {
+          const h = document.createElement('div');
+          h.style.fontWeight = '700';
+          h.style.marginTop = '10px';
+          h.textContent = t.label;
+          container.appendChild(h);
+          for (let i=0;i<t.count;i++){
+            container.appendChild(createMovRow(t.key,i));
+          }
+        }
+      });
+      collectMovilidadData();
+    }
+
+    ['count_bus','count_camioneta','count_auto','count_otros'].forEach(id=>{
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', renderMovilidad);
+    });
+
+    function collectMovilidadData(){
+      const out = [];
+      const counts = {
+        bus: Number(document.getElementById('count_bus').value||0),
+        camioneta: Number(document.getElementById('count_camioneta').value||0),
+        auto: Number(document.getElementById('count_auto').value||0),
+        otros: Number(document.getElementById('count_otros').value||0)
+      };
+      Object.keys(counts).forEach(type=>{
+        for (let i=0;i<counts[type];i++){
+          const hora = document.querySelector(`input[name="${type}_hora_${i}"]`)?.value || '';
+          const pertenece = document.querySelector(`input[name="${type}_pertenece_${i}"]:checked`)?.value || '';
+          const pertenece_otro = document.querySelector(`input[name="${type}_pertenece_${i}_otro"]`)?.value || '';
+          out.push({type, index:i, hora, pertenece, pertenece_otro});
+        }
+      });
+      document.getElementById('movilidad_json').value = JSON.stringify(out);
+    }
+
+    $('#resetBtn').addEventListener('click', () => {
+      form.reset();
+      renderMovilidad();
+      document.getElementById('movilidad_json').value = '';
+      showToast('Formulario limpiado');
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      collectMovilidadData();
+      const saveBtn = $('#saveBtn');
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Guardando...';
+      const formData = new FormData(form);
+      formData.append('usuario', usuarioActivo || 'anónimo');
+      formData.append('password', passwordActivo || '');
+      formData.append('formType', 'monitoreo2');
+      // mostrar en consola el contenido del FormData para depuración
+      console.log('=== datos formulario Monitoreo2 ===');
+      for (const [k,v] of formData.entries()){
+        console.log(k, ':', v);
+      }
+      try {
+        const res = await fetch(url, { method: 'POST', body: formData });
+        const contentType = res.headers.get('content-type') || '';
+        if (!res.ok) {
+          const text = await res.text().catch(() => '');
+          console.error('Error guardar (no OK):', res.status, text);
+          showToast('Error del servidor: ' + res.status);
+        } else if (contentType.includes('application/json')) {
+          const data = await res.json();
+          showToast(data.message || 'Registro guardado');
+          if (data.success) {
+            form.reset();
+            const first = form.querySelector('select, input, textarea');
+            if (first) first.focus();
+          }
+        } else {
+          const text = await res.text().catch(() => '');
+          console.error('Respuesta inesperada al guardar (no JSON):', text);
+          showToast('Respuesta inesperada: revisa permisos/CORS del Web App de Apps Script');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('Error al guardar (conexión)');
+      }
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Guardar registro';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <!DOCTYPE html>
+  <html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Monitoreo VANCAN 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root{
+        --bg:#f4f7fb;
+        --card:#ffffff;
+        --primary:#0b5ed7;
+        --primary-600:#0a58ca;
+        --muted:#6b7280;
+        --success:#16a34a;
+        --danger:#dc3545;
+        --radius:10px;
+        --shadow: 0 6px 18px rgba(11,94,215,0.08);
+        --maxw:1000px;
+      }
+      *{box-sizing:border-box}
+      body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; background:var(--bg); margin:0; color:#0f172a}
+      .wrap{max-width:var(--maxw); margin:28px auto; padding:20px}
+      header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+      .brand{display:flex;gap:12px;align-items:center}
+      .brand h1{font-size:18px;margin:0}
+      .card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px}
+      .grid{display:grid;gap:12px}
+      .row{display:flex;gap:12px;align-items:center}
+      .muted{color:var(--muted);font-size:13px}
+
+      /* Login */
+      #loginCard{max-width:420px;margin:0 auto}
+      label{font-size:14px;margin-bottom:6px;display:block;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial}
+      input[type=text], input[type=password], input[type=date], select, input[type=number]{width:100%;padding:10px;border:1px solid #e6e9ef;border-radius:8px;font-size:14px;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial}
+      /* Radio buttons: solo se puede marcar 1 opción por pregunta */
+      .radio-group{display:flex;gap:32px;align-items:center;flex-wrap:wrap;margin-top:12px}
+      .radio-group label{margin:0;display:flex;align-items:center;gap:8px;font-size:14px;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial}
+      .radio-group input[type=radio]{margin:0;width:18px;height:18px;cursor:pointer}
+      /* Preguntas de secciones */
+      .question-title{font-size:14px;font-weight:600;margin:0 0 14px 0;color:var(--primary);font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial}
+      /* Título de secciones principales (preguntas 1, 2, 3) */
+      .section-title{font-size:16px;font-weight:700;margin:0 0 12px 0;color:var(--primary);font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial}
+      /* Checkboxes: múltiples opciones */
+      .checkbox-group{display:flex;gap:32px;align-items:center;flex-wrap:wrap;margin-top:12px}
+      .checkbox-group label{margin:0;display:flex;align-items:center;gap:8px;font-size:14px;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial}
+      .checkbox-group input[type=checkbox]{margin:0;width:18px;height:18px;cursor:pointer}
+      /* Título de secciones (II. DESARROLLO, II. CIERRE) */
+      .section-header{font-size:15px;font-weight:700;margin:20px 0 16px 0;padding:8px 0;border-top:2px solid var(--primary);border-bottom:2px solid var(--primary);color:var(--primary);font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial}
+      /* Campo de texto condicional (¿Quién?) */
+      .conditional-field{display:none;margin-top:10px}
+      .conditional-field.visible{display:block}
+      .conditional-field input{width:100%;padding:10px;border:1px solid #e6e9ef;border-radius:8px;font-size:14px;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial}
+      /* Textarea para observaciones */
+      textarea{width:100%;padding:10px;border:1px solid #e6e9ef;border-radius:8px;font-size:14px;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial}
+      .actions{display:flex;gap:10px;align-items:center;margin-top:12px}
+      /* Centrar botones dentro de la tarjeta de login */
+      #loginCard .actions{justify-content:center}
+      button.btn{background:var(--primary);color:white;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:600}
+      button.btn.ghost{background:transparent;color:var(--primary);border:1px solid rgba(11,94,215,0.12)}
+      button.btn:disabled{opacity:0.6;cursor:not-allowed}
+
+      /* Form layout */
+      .form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+      @media (max-width:760px){.form-grid{grid-template-columns:1fr}}
+      .form-section{margin-top:16px}
+      h2.section{margin:6px 0 10px 0;color:var(--primary)}
+
+      /* small helpers */
+      .small{font-size:13px;color:var(--muted)}
+      .fade{transition:all .28s ease;opacity:0;transform:translateY(6px);height:0;overflow:hidden}
+      .fade.show{opacity:1;transform:none;height:auto}
+      .hidden-field{display:none}
+      .hidden-field.visible{display:block}
+
+      /* toast */
+      .toast{position:fixed;right:18px;bottom:18px;background:#111827;color:white;padding:10px 14px;border-radius:8px;box-shadow:0 8px 30px rgba(2,6,23,0.4);display:none}
+      .toast.show{display:block}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="brand">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="6" fill="#0b5ed7"/><path d="M7 12h10M7 8h10M7 16h6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div>
+            <h1>Monitoreo VANCAN 2026</h1>
+            <div class="muted">Registro de encuestas y participación</div>
+          </div>
+        </div>
+        <div class="muted">Fecha: <strong id="nowDate"></strong></div>
+      </header>
+
+      <main class="grid">
+        <section id="loginCard" class="card">
+          <h2 style="margin:0 0 8px 0">Acceso</h2>
+          <form id="loginForm" aria-label="Formulario de acceso">
+            <label for="usuario">Usuario</label>
+            <input id="usuario" name="usuario" type="text" required autocomplete="username">
+            <label for="password">Contraseña</label>
+            <input id="password" name="password" type="password" required autocomplete="current-password">
+            <div class="actions">
+              <button class="btn" type="submit">Ingresar</button>
+            </div>
+          </form>
+        </section>
+
+        <section id="formArea" class="fade">
+          <div class="card" style="display:flex;gap:14px;flex-direction:column">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+              <div>
+                <h2 class="section">Registro de Monitoreo</h2>
+                <div class="small">Usuario: <span id="userLabel">-</span></div>
+              </div>
+
+            </div>
+
+            <form id="miFormulario">
+              <div class="form-grid">
+                <div>
+                  <label for="microred">Microred</label>
+                  <select id="microred" name="microred">
+                    <option>ASA</option>
+                    <option>Miraflores</option>
+                    <option>Socabaya</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="vaccine_type">Tipo de vacunación</label>
+                  <select id="vaccine_type" name="vaccine_type"><option>general</option><option>barrido</option></select>
+                </div>
+                <div>
+                  <label for="fecha">Fecha</label>
+                  <input id="fecha" name="fecha" type="date">
+                </div>
+              </div>
+              <!-- I. APERTURA -->
+              <div class="section-header">I. APERTURA</div>
+
+              <div class="form-section">
+                <h1 class="section-title">¿1. Cuántas personas de la MICRORED participaron en la VANCAN?</h1>
+                <div class="form-grid">
+                  <div><label>Encargado de la VANCAN</label><input type="number" name="mr_encargado" min="0"></div>
+                    <div><label>Inspectores</label><input type="number" name="mr_inspectores" min="0"></div>
+                    <div><label>Cadena de frío</label><input type="number" name="mr_cadena_frio" min="0"></div>
+                    <div><label>Promoción de la salud</label><input type="number" name="mr_promocion" min="0"></div>
+                    <div><label>Vacunadores</label><input type="number" name="mr_vacunadores" min="0"></div>
+                    <div><label>Anotadores</label><input type="number" name="mr_anotadores" min="0"></div>
+                    <div><label>Otros (microred)</label><input type="number" name="mr_otros" min="0"></div>
+                    <div class="hidden-field" id="especificar-microred"><label>Especificar otros</label><input type="text" name="mr_otros_esp"></div>
+                  </div>
+                </div>
+
+              <div class="form-section">
+                <h1 class="section-title">2. ¿Cuántas personas adicionales participaron en la VANCAN:?</h1>
+                <div class="form-grid">
+                  <div><label>Municipalidad</label><input type="number" name="add_municipalidad" min="0"></div>
+                  <div><label>Estudiantes</label><input type="number" name="add_estudiantes" min="0"></div>
+                  <div><label>Agentes comunitarios</label><input type="number" name="add_agentes" min="0"></div>
+                  <div><label>Veterinarios particulares</label><input type="number" name="add_veterinarios" min="0"></div>
+                  <div><label>Otras microredes</label><input type="number" name="add_otras_microredes" min="0"></div>
+                  <div><label>UPCH y Monitores</label><input type="number" name="add_upch_monitores" min="0"></div>
+                  <div><label>Otros adicionales</label><input type="number" name="add_otros" min="0"></div>
+                  <div class="hidden-field" id="especificar-adicionales"><label>Especificar otros</label><input type="text" name="add_otros_esp"></div>
+                </div>
+              </div>
+
+              <!-- Sección 3: Estado de materiales (radio buttons para seleccionar solo 1 opción) -->
+              <div class="form-section">
+                <h1 class="section-title">3. Estado de materiales a las 7:45 am</h1>
+                
+                <div style="margin-bottom:20px">
+                  <p class="question-title">Termos / congelantes:</p>
+                  <div class="radio-group">
+                    <label><input type="radio" name="est_term_cong" value="Listo"> Listo</label>
+                    <label><input type="radio" name="est_term_cong" value="En preparación"> En preparación</label>
+                    <label><input type="radio" name="est_term_cong" value="No preparado"> No preparado</label>
+                  </div>
+                </div>
+
+                <div>
+                  <p class="question-title">Jeringa, EPP, carnet, caja de bioseguridad, bolsas:</p>
+                  <div class="radio-group">
+                    <label><input type="radio" name="est_epp" value="Listo"> Listo</label>
+                    <label><input type="radio" name="est_epp" value="En preparación"> En preparación</label>
+                    <label><input type="radio" name="est_epp" value="No preparado"> No preparado</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- II. DESARROLLO -->
+              <div class="section-header">II. DESARROLLO</div>
+
+              <!-- Pregunta 4: Hubo supervisión durante la VANCAN (checkboxes - múltiples opciones) -->
+              <div class="form-section">
+                <h1 class="section-title">4. ¿Hubo supervisión durante la VANCAN?</h1>
+                <div class="checkbox-group">
+                  <label><input type="checkbox" name="vancan_super" value="Gerencia"> Gerencia</label>
+                  <label><input type="checkbox" name="vancan_super" value="Red"> Red</label>
+                  <label><input type="checkbox" name="vancan_super" value="No hubo" id="super-no-hubo-check"> No hubo</label>
+                  <label><input type="checkbox" name="vancan_super" value="Microred" id="microred-check"> Microred</label>
+                </div>
+                <div class="conditional-field" id="vancan_super-vancan_super_who">
+                  <label>¿Quién?</label>
+                  <input type="text" name="vancan_super_who" placeholder="Especificar nombre/entidad">
+                </div>
+              </div>
+
+              <!-- Pregunta 5: Hubo supervisión de cadena de frío (radio buttons - una sola opción) -->
+              <div class="form-section">
+                <h1 class="section-title">5. ¿Hubo supervisión de cadena de frío durante la VANCAN?</h1>
+                <div class="radio-group">
+                  <label><input type="radio" name="cadena_f_super" value="No" id="cadena-no"> No</label>
+                  <label><input type="radio" name="cadena_f_super" value="Sí" id="cadena-si"> Sí</label>
+                </div>
+                <div class="conditional-field" id="cadena-quien">
+                  <label>¿Quién?</label>
+                  <input type="text" name="cadena_who" placeholder="Especificar nombre/entidad">
+                </div>
+              </div>
+
+              <!-- Pregunta 6: Promoción de la salud participó (radio buttons - una sola opción) -->
+              <div class="form-section">
+                <h1 class="section-title">6. ¿Promoción de la salud participó durante la VANCAN?</h1>
+                <div class="radio-group">
+                  <label><input type="radio" name="promo_partic" value="No" id="promocion-no"> No</label>
+                  <label><input type="radio" name="promo_partic" value="Sí" id="promocion-si"> Sí</label>
+                </div>
+                <div class="conditional-field" id="promocion-quien">
+                  <label>¿Quién?</label>
+                  <input type="text" name="promo_who" placeholder="Especificar nombre/entidad">
+                </div>
+              </div>
+
+              <!-- II. CIERRE -->
+              <div class="section-header">II. CIERRE</div>
+
+              <!-- Pregunta 7: Observaciones (textarea libre) -->
+              <div class="form-section">
+                <h1 class="section-title">7. ¿Algún comentario y/o sugerencia sobre la actividad de hoy?</h1>
+                <textarea name="observaciones" rows="4" placeholder="Escribe tus comentarios y sugerencias aquí..."></textarea>
+              </div>
+
+              <div style="display:flex;gap:12px;align-items:center;margin-top:14px">
+                <button class="btn" type="submit" id="saveBtn">Guardar registro</button>
+                <button type="button" class="btn ghost" id="resetBtn">Limpiar</button>
+                <a href="../" class="btn ghost" style="text-decoration: none; display: inline-flex; align-items: center;">← Volver</a>
+              </div>
+            </form>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      const url = "https://script.google.com/macros/s/AKfycbxj8NKgHlBuuF1Gx48H-eo-HSh7z1NR8RhNOJhMORWK350IUYK5D1JmTq1sm_65hwUJ/exec";
+
+      // util
+      const $ = sel => document.querySelector(sel);
+      const nowDate = new Date().toLocaleDateString();
+      $('#nowDate').textContent = nowDate;
+
+      // login handling
+      const loginForm = $('#loginForm');
+      const formArea = $('#formArea');
+      const userLabel = $('#userLabel');
+      let usuarioActivo = null; let passwordActivo = null;
+
+      function showToast(msg, timeout=3000){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), timeout); }
+
+      loginForm.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        const btn = loginForm.querySelector('button[type=submit]'); btn.disabled = true; btn.textContent = 'Validando...';
+        const fd = new FormData(loginForm); fd.append('login','true');
+        try{
+          const res = await fetch(url, {method:'POST', body:fd});
+          const contentType = res.headers.get('content-type') || '';
+          if (!res.ok) {
+            const text = await res.text().catch(()=>'');
+            console.error('Respuesta no OK', res.status, text);
+            showToast('Error del servidor: ' + res.status);
+          } else if (contentType.includes('application/json')) {
+            const data = await res.json();
+            if(data.success){
+              usuarioActivo = fd.get('usuario'); passwordActivo = fd.get('password');
+              userLabel.textContent = usuarioActivo;
+              loginForm.closest('#loginCard').style.display = 'none';
+              formArea.classList.add('show');
+              showToast('Login correcto');
+            } else { showToast(data.message || 'Credenciales incorrectas'); }
+          } else {
+            const text = await res.text().catch(()=>'');
+            console.error('Respuesta inesperada al loguear (no JSON):', text);
+            showToast('Respuesta inesperada: revisa permisos/CORS del Web App de Apps Script');
+          }
+        }catch(err){ console.error(err); showToast('Error de conexión'); }
+        btn.disabled = false; btn.textContent = 'Ingresar';
+      });
+
+      // demo quick access (si existe el botón)
+      const demoBtn = $('#demoBtn');
+      if (demoBtn) {
+        demoBtn.addEventListener('click', ()=>{
+          $('#usuario').value = 'demo'; $('#password').value = 'demo';
+          $('#loginForm').dispatchEvent(new Event('submit'));
+        });
+      }
+
+      // form interactivity
+      const form = $('#miFormulario');
+      const numericFieldsSelector = 'input[type=number]';
+
+      function getNumericInputs(){ return Array.from(form.querySelectorAll(numericFieldsSelector)); }
+
+      // toggle hidden fields
+      function toggleHiddenFields(){
+        const otrosMicrored = form.querySelector('input[name="mr_otros"]');
+        const especificarMicrored = document.getElementById('especificar-microred');
+        const inputMicroredDesc = form.querySelector('input[name=\"mr_otros_esp\"]');
+        const otrosAdicionales = form.querySelector('input[name=\"add_otros\"]');
+        const especificarAdicionales = document.getElementById('especificar-adicionales');
+        const inputAdicionalesDesc = form.querySelector('input[name=\"add_otros_esp\"]');
+        
+        if(Number(otrosMicrored.value) > 0){
+          especificarMicrored.classList.add('visible');
+        } else {
+          especificarMicrored.classList.remove('visible');
+          inputMicroredDesc.value = '';
+        }
+        
+        if(Number(otrosAdicionales.value) > 0){
+          especificarAdicionales.classList.add('visible');
+        } else {
+          especificarAdicionales.classList.remove('visible');
+          inputAdicionalesDesc.value = '';
+        }
+
+        // Pregunta 4: mostrar "¿Quién?" si está marcado "Microred"
+        const microredCheck = document.getElementById('microred-check');
+        const supervisionQuien = document.getElementById('vancan_super-vancan_super_who');
+        const inputSupervisionQuien = form.querySelector('input[name="vancan_super_who"]');
+        
+        if(microredCheck && microredCheck.checked){
+          supervisionQuien.classList.add('visible');
+        } else {
+          supervisionQuien.classList.remove('visible');
+          if(inputSupervisionQuien) inputSupervisionQuien.value = '';
+        }
+
+        // Pregunta 5: mostrar "¿Quién?" si está marcado "Sí"
+        const cadenaCheck = document.getElementById('cadena-si');
+        const cadenaQuien = document.getElementById('cadena-quien');
+        const inputCadenaQuien = form.querySelector('input[name="cadena_who"]');
+        
+        if(cadenaCheck && cadenaCheck.checked){
+          cadenaQuien.classList.add('visible');
+        } else {
+          cadenaQuien.classList.remove('visible');
+          if(inputCadenaQuien) inputCadenaQuien.value = '';
+        }
+
+        // Pregunta 6: mostrar "¿Quién?" si está marcado "Sí"
+        const promocionCheck = document.getElementById('promocion-si');
+        const promocionQuien = document.getElementById('promocion-quien');
+        const inputPromocionQuien = form.querySelector('input[name="promo_who"]');
+        
+        if(promocionCheck && promocionCheck.checked){
+          promocionQuien.classList.add('visible');
+        } else {
+          promocionQuien.classList.remove('visible');
+          if(inputPromocionQuien) inputPromocionQuien.value = '';
+        }
+      }
+
+      // listen inputs
+      form.addEventListener('input', ()=>{ toggleHiddenFields(); });
+      form.addEventListener('change', ()=>{ toggleHiddenFields(); });
+      document.addEventListener('DOMContentLoaded', ()=>{ toggleHiddenFields(); });
+
+      // Lógica para "No hubo" en pregunta 4 (supervisión)
+      const superNohuebeCheck = document.getElementById('super-no-hubo-check');
+      const superCheckboxes = form.querySelectorAll('input[name="vancan_super"]');
+      
+      if(superNohuebeCheck) {
+        superNohuebeCheck.addEventListener('change', () => {
+          if(superNohuebeCheck.checked) {
+            superCheckboxes.forEach(cb => {
+              if(cb !== superNohuebeCheck) {
+                cb.checked = false;
+                cb.disabled = true;
+              }
+            });
+            // limpiar campo de quién
+            const superQuienInput = form.querySelector('input[name="vancan_super_who"]');
+            if(superQuienInput) superQuienInput.value = '';
+          } else {
+            superCheckboxes.forEach(cb => { cb.disabled = false; });
+          }
+          toggleHiddenFields();
+        });
+      }
+
+      // Listener para habilitar opciones cuando se marca alguna otra en supervisión
+      superCheckboxes.forEach(cb => {
+        if(cb.id !== 'super-no-hubo-check') {
+          cb.addEventListener('change', () => {
+            if(cb.checked && superNohuebeCheck.checked) {
+              superNohuebeCheck.checked = false;
+            }
+          });
+        }
+      });
+
+      // reset
+      $('#resetBtn').addEventListener('click', ()=>{ form.reset(); showToast('Formulario limpiado'); });
+
+      // submit
+      form.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        // Antes de crear FormData, asegurar que campos numéricos vacíos se conviertan a 0
+        const numericInputs = getNumericInputs();
+        numericInputs.forEach(inp => {
+          if (inp.value === '' || inp.value == null) inp.value = '0';
+        });
+
+        const saveBtn = $('#saveBtn'); saveBtn.disabled = true; saveBtn.textContent = 'Guardando...';
+        const formData = new FormData(form);
+        formData.append('usuario', usuarioActivo || 'anónimo');
+        formData.append('password', passwordActivo || '');
+        formData.append('formType', 'monitoreo');
+        try{
+          const res = await fetch(url, {method:'POST', body:formData});
+          const contentType = res.headers.get('content-type') || '';
+          if (!res.ok) {
+            const text = await res.text().catch(()=>'');
+            console.error('Error guardar (no OK):', res.status, text);
+            showToast('Error del servidor: ' + res.status);
+          } else if (contentType.includes('application/json')) {
+            const data = await res.json();
+            showToast(data.message || 'Registro guardado');
+            // Si el guardado fue exitoso, limpiar el formulario para una nueva entrada
+            if (data.success) {
+              form.reset();
+              const first = form.querySelector('select, input, textarea');
+              if (first) first.focus();
+            }
+          } else {
+            const text = await res.text().catch(()=>'');
+            console.error('Respuesta inesperada al guardar (no JSON):', text);
+            showToast('Respuesta inesperada: revisa permisos/CORS del Web App de Apps Script');
+          }
+        }catch(err){ console.error(err); showToast('Error al guardar (conexión)'); }
+        saveBtn.disabled = false; saveBtn.textContent = 'Guardar registro';
+      });
+    </script>
+  </body>
+  </html>
+
