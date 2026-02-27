@@ -2,7 +2,7 @@
 
 Sistema web completo para registro de actividades y monitoreo de la **Vacunación Activa para Niños en Arequipa (VANCAN)** 2026.
 
-Acceso único: **[https://TU_USUARIO.github.io/monitores/](https://TU_USUARIO.github.io/monitores/)**
+Acceso único: **[https://TU_USUARIO.github.io/monitores/](https://miguealarcon.github.io/monitores-supervisores/)**
 
 ## 📋 Descripción
 
